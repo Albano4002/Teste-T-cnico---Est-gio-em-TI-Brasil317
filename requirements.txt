@@ -1,3 +1,4 @@
 selenium
 webdriver_manager
 psycopg2
+tabulate

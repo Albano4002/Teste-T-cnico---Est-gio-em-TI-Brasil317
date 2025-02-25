@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from time import sleep
 import psycopg2
 import os
+from tabulate import tabulate
+from datetime import datetime
 
 def setup_webdriver():
     chrome_options = Options()
@@ -39,8 +41,8 @@ def scrape_data(nav):
                 # Tratamento para garantir que os textos sejam UTF-8
                 titulo = titulo.encode('utf-8', 'replace').decode('utf-8')
                 link = link.encode('utf-8', 'replace').decode('utf-8')
-                print(f"Títulos: {titulo}\nLinks: {link}\n")
-                dados.append((titulo, link))
+                data_extracao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                dados.append((titulo, link, data_extracao))
         except Exception as e:
             print(f"Erro ao extrair dados da notícia: {e}")
     
@@ -60,8 +62,8 @@ def insert_data_to_db(dados):
         cursor = conexao.cursor()
         
         # Insere os dados coletados
-        for titulo, link in dados:
-            cursor.execute("INSERT INTO noticias (titulo, link, data_extracao) VALUES (%s, %s, NOW())", (titulo, link))
+        for titulo, link, data_extracao in dados:
+            cursor.execute("INSERT INTO noticias (titulo, link, data_extracao) VALUES (%s, %s, %s)", (titulo, link, data_extracao))
         
         conexao.commit()
         cursor.close()
@@ -81,6 +83,7 @@ def main():
         nav.quit()
     
     if dados:
+        print(tabulate(dados, headers=["Título", "Link", "Data de Extração"], tablefmt="grid"))
         insert_data_to_db(dados)
 
 if __name__ == "__main__":
