@@ -16,6 +16,7 @@ meu-scraper/
 ├── schema.sql           # Script SQL para criação da tabela 'noticias'
 ├── Dockerfile           # Configuração do container Python com o scraper
 ├── docker-compose.yml   # Definição dos serviços (PostgreSQL e scraper)
+├── requirements.txt     # Dependências para serem instaladas
 └── README.md            # Este arquivo com instruções de execução
 ```
 
